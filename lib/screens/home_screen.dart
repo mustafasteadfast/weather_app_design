@@ -33,25 +33,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     "Dhaka",
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                    // style: TextStyle(
-                    //   fontSize: 32,
-                    //   fontFamily: "inter",
-                    //   fontWeight: FontWeight.bold,
-                    //   color: Colors.white,
-                    // ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: 15),
-              Text(
+              const Text(
                 "📍 Current Location",
                 style: TextStyle(color: Colors.white),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 27.0, right: 27.0),
+                padding: const EdgeInsets.only(left: 65.0, right: 65.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -60,21 +54,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 130,
                       width: 135,
                     ),
-                    Text(
+                    const Text(
                       "13°",
                       style: TextStyle(
-                        fontSize:122,
+                        fontSize: 122,
                         fontFamily: "circular",
                         color: Colors.white,
-                        fontWeight: FontWeight.w300
+                        fontWeight: FontWeight.w300,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              Text(
-                "Partly Cloud  -  H:17o  L:4o",
+              const Text(
+                "Partly Cloud  -  H:17º  L:4º",
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: "circular",
@@ -90,12 +84,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Color(0xFFFFFFFF).withOpacity(0.1),
+                        color: const Color(0xFFFFFFFF).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       height: 41,
                       width: 106,
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           "Today",
                           style: TextStyle(
@@ -109,12 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: Color(0xFF000000).withOpacity(0.1),
+                        color: const Color(0xFF000000).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       height: 41,
                       width: 134,
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           "Next Day",
                           style: TextStyle(
@@ -136,570 +130,275 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     children: [
-                      // Hourly containers (unchanged for brevity)
                       Row(
-                        children: [
-                          Container(
-                            height: 158,
-                            width: MediaQuery.of(context).size.width * 0.18,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [Color(0xFF748BD9), Color(0xFF7087D3)],
-                              ),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
+                        children: List.generate(
+                          6,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(right: 15),
                             child: Container(
-                              margin: EdgeInsets.all(4.0),
+                              height: 158,
+                              width: MediaQuery.of(context).size.width * 0.18,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    Color(0xFFA8B8EC),
-                                    Color(0xFF6B84D8),
+                                    Color(0xFF748BD9),
+                                    Color(0xFF7087D3),
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(46),
+                                borderRadius: BorderRadius.circular(50),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Now",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 16,
+                              child: Container(
+                                margin: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color(0xFFA8B8EC),
+                                      Color(0xFF6B84D8),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(46),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(top: 15.0),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "Now",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "circular",
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    ),
-                                    Image.asset(
-                                      "asset/partly_cloudy.png",
-                                      height: 60,
-                                    ),
-                                    Text(
-                                      "13°",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 20,
+                                      Image(
+                                        image: AssetImage(
+                                          "asset/partly_cloudy.png",
+                                        ),
+                                        height: 60,
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        "13°",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "circular",
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 15),
-                          // Add other hourly containers as needed
-                          Container(
-                            height: 158,
-                            width: MediaQuery.of(context).size.width * 0.18,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [Color(0xFF748BD9), Color(0xFF7087D3)],
-                              ),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Container(
-                              margin: EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFFA8B8EC),
-                                    Color(0xFF6B84D8),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(46),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Now",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      "asset/partly_cloudy.png",
-                                      height: 60,
-                                    ),
-                                    Text(
-                                      "13°",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          // Add other hourly containers as needed
-                          Container(
-                            height: 158,
-                            width: MediaQuery.of(context).size.width * 0.18,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [Color(0xFF748BD9), Color(0xFF7087D3)],
-                              ),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Container(
-                              margin: EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFFA8B8EC),
-                                    Color(0xFF6B84D8),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(46),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Now",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      "asset/partly_cloudy.png",
-                                      height: 60,
-                                    ),
-                                    Text(
-                                      "13°",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          // Add other hourly containers as needed
-                          Container(
-                            height: 158,
-                            width: MediaQuery.of(context).size.width * 0.18,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomLeft,
-                                colors: [Color(0xFF748BD9), Color(0xFF7087D3)],
-                              ),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Container(
-                              margin: EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFFA8B8EC),
-                                    Color(0xFF6B84D8),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(46),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Now",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      "asset/partly_cloudy.png",
-                                      height: 60,
-                                    ),
-                                    Text(
-                                      "13°",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          // Add other hourly containers as needed
-                          Container(
-                            height: 158,
-                            width: MediaQuery.of(context).size.width * 0.18,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [Color(0xFF748BD9), Color(0xFF7087D3)],
-                              ),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Container(
-                              margin: EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFFA8B8EC),
-                                    Color(0xFF6B84D8),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(46),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Now",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      "asset/partly_cloudy.png",
-                                      height: 60,
-                                    ),
-                                    Text(
-                                      "13°",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          // Add other hourly containers as needed
-                          Container(
-                            height: 158,
-                            width: MediaQuery.of(context).size.width * 0.18,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [Color(0xFF748BD9), Color(0xFF7087D3)],
-                              ),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Container(
-                              margin: EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFFA8B8EC),
-                                    Color(0xFF6B84D8),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(46),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Now",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      "asset/partly_cloudy.png",
-                                      height: 60,
-                                    ),
-                                    Text(
-                                      "13°",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "circular",
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 32),
-              // Comment: Changed Expanded to Flexible and made bottom section height dynamic
               Flexible(
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Stack(
-                    clipBehavior:
-                        Clip.none, // Allows children to overflow the Stack's bounds
+                    clipBehavior: Clip.none,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height * 0.3,
-                          minHeight: 180,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF97ABFF), Color(0xFF123597)],
+                      ClipPath(
+                        clipper: BottomContainerClipper(),
+                        child: Container(
+                          width: double.infinity,
+                          constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height * 0.3,
+                            minHeight: 180,
                           ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(150),
-                            topRight: Radius.circular(150),
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Color(0xFF97ABFF), Color(0xFF123597)],
+                            ),
                           ),
-                        ),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 50),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Color(0xFF4B66B5),
-                                            Color(0xFFC4CDEE),
-                                          ],
-                                          begin: Alignment.bottomRight,
-                                          end: Alignment.topLeft,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                          color: Colors.white.withOpacity(0.1),
-                                          width: 1.5,
-                                        ),
-                                      ),
-                                      height: 80,
-                                      width:
-                                          MediaQuery.of(context).size.width *
-                                          0.7,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Image.asset(
-                                            "asset/sunset.png",
-                                            height: 50,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  "Sunset",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontFamily: "circular",
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "6:30 PM",
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: "circular",
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  "Sunrise",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontFamily: "circular",
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "6:30 AM",
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: "circular",
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(height: 50), // Space for curve
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFF4B66B5),
+                                        Color(0xFFC4CDEE),
+                                      ],
+                                      begin: Alignment.bottomRight,
+                                      end: Alignment.topLeft,
                                     ),
-                                    SizedBox(height: 20),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Color(0xFF4B66B5),
-                                            Color(0xFFC4CDEE),
-                                          ],
-                                          begin: Alignment.bottomRight,
-                                          end: Alignment.topLeft,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                          color: Colors.white.withOpacity(0.1),
-                                          width: 1.5,
-                                        ),
-                                      ),
-                                      height: 80,
-                                      width:
-                                          MediaQuery.of(context).size.width *
-                                          0.7,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 15.0,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              "asset/sunrise.png",
-                                              height: 50,
-                                              color: Color.fromARGB(
-                                                255,
-                                                214,
-                                                214,
-                                                214,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(
-                                                8.0,
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Text(
-                                                    "UV Index",
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontFamily: "circular",
-                                                      color: Color.fromARGB(
-                                                        255,
-                                                        201,
-                                                        201,
-                                                        201,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "1 low",
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontFamily: "circular",
-                                                      color: Colors.grey[300],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.1),
+                                      width: 1.5,
                                     ),
-                                  ],
+                                  ),
+                                  height: 80,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const Image(
+                                        image: AssetImage("asset/sunset.png"),
+                                        height: 50,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: const [
+                                            Text(
+                                              "Sunset",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: "circular",
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              "6:30 PM",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontFamily: "circular",
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: const [
+                                            Text(
+                                              "Sunrise",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: "circular",
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              "6:30 AM",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontFamily: "circular",
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 20),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFF4B66B5),
+                                        Color(0xFFC4CDEE),
+                                      ],
+                                      begin: Alignment.bottomRight,
+                                      end: Alignment.topLeft,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.1),
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  height: 80,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const Image(
+                                          image: AssetImage(
+                                            "asset/sunrise.png",
+                                          ),
+                                          height: 50,
+                                          color: Color.fromARGB(
+                                            255,
+                                            214,
+                                            214,
+                                            214,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                "UV Index",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontFamily: "circular",
+                                                  color: Colors.grey[300],
+                                                ),
+                                              ),
+                                              Text(
+                                                "1 low",
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontFamily: "circular",
+                                                  color: Colors.grey[300],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       Positioned(
-                        bottom:
-                            200, // Increased to push it higher, overlapping the edge
-                        right:
-                            MediaQuery.of(context).size.width / 2 -
-                            30, // Still centered horizontally
+                        bottom: 200,
+                        left: MediaQuery.of(context).size.width / 2 - 35,
                         child: Container(
                           width: 70,
                           height: 70,
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xff92a3db), // First color #92a3db
-                                Color(0xff536dc2), // Second color #536dc2
-                              ],
+                              colors: [Color(0xff92a3db), Color(0xff536dc2)],
                             ),
                             borderRadius: BorderRadius.circular(50),
                             border: Border.all(
-                              color: Color(0xFF4461bd), // Stroke color
-                              width: 9.0, // Stroke width
+                              color: const Color(0xFF4461bd),
+                              width: 9.0,
                             ),
                           ),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 32.0),
-                                  child: Image.asset(
-                                    "asset/arrow_up.png",
-                                    height: 20,
-                                  ),
-                                ),
-                              ],
+                          child: const Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 32.0),
+                              child: Image(
+                                image: AssetImage("asset/arrow_up.png"),
+                                height: 20,
+                              ),
                             ),
                           ),
                         ),
@@ -714,4 +413,42 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+// Custom Clipper for a circular segment shape
+class BottomContainerClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    final width = size.width;
+    final height = size.height;
+
+    // Start at bottom-left
+    path.moveTo(0, height);
+    path.lineTo(0, 70); // Low start on left
+
+    // Circular arc-like curve
+    path.quadraticBezierTo(
+      width * 0.25,
+      0, // Control point for left rise
+      width * 0.5,
+      0, // Stable middle (lowest point of "circle")
+    );
+    path.quadraticBezierTo(
+      width * 0.75,
+      0, // Control point for right descent
+      width,
+      70, // Low end on right
+    );
+
+    // Complete the shape
+    path.lineTo(width, height);
+    path.lineTo(0, height);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
