@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+class Dimensions {
+  Dimensions._();
+  static const double padding = 15.0;
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -24,15 +29,19 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 47.0),
+                  padding: const EdgeInsets.only(top: Dimensions.padding),
                   child: Text(
                     "Dhaka",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontFamily: "inter",
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    // style: TextStyle(
+                    //   fontSize: 32,
+                    //   fontFamily: "inter",
+                    //   fontWeight: FontWeight.bold,
+                    //   color: Colors.white,
+                    // ),
                   ),
                 ),
               ),
@@ -51,16 +60,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 130,
                       width: 135,
                     ),
-                    Flexible(
-                      child: Text(
-                        "13°",
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width * 0.3,
-                          fontFamily: "circular",
-                          color: Colors.white,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      "13°",
+                      style: TextStyle(
+                        fontSize:122,
+                        fontFamily: "circular",
+                        color: Colors.white,
+                        fontWeight: FontWeight.w300
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
