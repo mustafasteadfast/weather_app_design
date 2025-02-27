@@ -1,221 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
-class Dimensions {
-  Dimensions._();
-  static const double padding = 15.0;
-}
-
-// Reusable Hourly Weather Container
-class HourlyWeatherContainer extends StatelessWidget {
-  final String time;
-  final String iconPath;
-  final String temperature;
-
-  const HourlyWeatherContainer({
-    super.key,
-    required this.time,
-    required this.iconPath,
-    required this.temperature,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 158,
-      width: MediaQuery.of(context).size.width * 0.18,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF748BD9), Color(0xFF7087D3)],
-        ),
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: Container(
-        margin: const EdgeInsets.all(4.0),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFA8B8EC), Color(0xFF6B84D8)],
-          ),
-          borderRadius: BorderRadius.circular(46),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Column(
-            children: [
-              Text(
-                time,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: "circular",
-                  fontSize: 16,
-                ),
-              ),
-              Image.asset(
-                iconPath,
-                height: 60,
-              ),
-              Text(
-                temperature,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: "circular",
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Reusable Button Container
-class WeatherButton extends StatelessWidget {
-  final String label;
-  final Color backgroundColor;
-  final bool isBold;
-
-  const WeatherButton({
-    super.key,
-    required this.label,
-    required this.backgroundColor,
-    this.isBold = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      height: 41,
-      width: label == "Today" ? 106 : 134, // Match your original widths
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(
-            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-            color: Colors.white,
-            fontFamily: "inter",
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-}
-
-// Reusable Info Container (for Sunset/Sunrise and UV Index)
-class InfoContainer extends StatelessWidget {
-  final String title;
-  final String value;
-  final String? iconPath;
-  final Color? iconColor;
-  final bool isHorizontal;
-
-  const InfoContainer({
-    super.key,
-    required this.title,
-    required this.value,
-    this.iconPath,
-    this.iconColor,
-    this.isHorizontal = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF4B66B5), Color(0xFFC4CDEE)],
-          begin: Alignment.bottomRight,
-          end: Alignment.topLeft,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.1),
-          width: 1.5,
-        ),
-      ),
-      height: 80,
-      width: MediaQuery.of(context).size.width * 0.7,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: isHorizontal
-            ? Row(
-                mainAxisAlignment: iconPath != null
-                    ? MainAxisAlignment.spaceEvenly
-                    : MainAxisAlignment.start,
-                children: [
-                  if (iconPath != null)
-                    Image.asset(
-                      iconPath!,
-                      height: 50,
-                      color: iconColor ?? Colors.white,
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: "circular",
-                            color: iconColor ?? Colors.white,
-                          ),
-                        ),
-                        Text(
-                          value,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "circular",
-                            color: iconColor ?? Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (iconPath != null)
-                    Image.asset(
-                      iconPath!,
-                      height: 50,
-                      color: iconColor ?? Colors.white,
-                    ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: "circular",
-                      color: iconColor ?? Colors.white,
-                    ),
-                  ),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: "circular",
-                      color: iconColor ?? Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-      ),
-    );
-  }
-}
+import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
+import '../main.dart';
+import '../models/weather_data.dart';
+import '../components/hourly_weather_container.dart';
+import '../components/weather_button.dart';
+import '../components/info_container.dart';
+import '../components/bottom_container_clipper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -225,6 +17,135 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late WeatherData weatherData;
+  bool isLoading = true;
+  bool showNextDay = false;
+  late List<dynamic> fullHourlyForecast;
+  late dynamic weatherJson;
+
+  @override
+  void initState() {
+    super.initState();
+    weatherData = WeatherData(
+      city: "Dhaka",
+      currentTemp: "13°",
+      condition: "Partly Cloud",
+      highTemp: "17°",
+      lowTemp: "4°",
+      hourlyForecast: List.generate(
+        6,
+        (index) => HourlyForecast(
+          time: "Now",
+          iconPath: "asset/partly_cloudy.json",
+          temperature: "13°",
+        ),
+      ),
+      sunsetTime: "6:30 PM",
+      uvIndex: "1 low",
+    );
+    fetchWeatherData();
+  }
+
+  Future<void> fetchWeatherData() async {
+    const String apiKey = "fb205e43e41c4e0db8053302252702";
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'http://api.weatherapi.com/v1/forecast.json?key=$apiKey&q=Dhaka&days=3&aqi=yes',
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        weatherJson = jsonDecode(response.body);
+        fullHourlyForecast = weatherJson['forecast']['forecastday'][0]['hour'] +
+            weatherJson['forecast']['forecastday'][1]['hour'];
+
+        setState(() {
+          weatherData = _buildWeatherData(0); // Start from current time
+          isLoading = false;
+        });
+      } else {
+        setState(() => isLoading = false);
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+    }
+  }
+
+  WeatherData _buildWeatherData(int dayOffset) {
+    final current = weatherJson['current'];
+    final todayForecast = weatherJson['forecast']['forecastday'][0]['day'];
+    final now = DateTime.now().toLocal(); 
+    final currentHour = now.hour;
+
+    // finding the index of the next hour
+    int startIndex = fullHourlyForecast.indexWhere((entry) {
+      final forecastTime = DateTime.parse(entry['time']).toLocal();
+      return forecastTime.hour > currentHour;
+    });
+
+    if (startIndex == -1) startIndex = 0; // fallback to start of the day
+
+    
+    if (dayOffset > 0) {
+      startIndex += 24; 
+      if (startIndex >= fullHourlyForecast.length) startIndex = 0; 
+    }
+
+    return WeatherData(
+      city: weatherJson['location']['name'],
+      currentTemp: "${current['temp_c'].round()}°",
+      condition: current['condition']['text'],
+      highTemp: "${todayForecast['maxtemp_c'].round()}°",
+      lowTemp: "${todayForecast['mintemp_c'].round()}°",
+      hourlyForecast: fullHourlyForecast
+          .skip(startIndex)
+          .take(6)
+          .map((entry) => HourlyForecast(
+                time: _formatTo12Hour(
+                    DateTime.parse(entry['time']).toLocal()),
+                iconPath: _mapConditionToIcon(entry['condition']['text']),
+                temperature: "${entry['temp_c'].round()}°",
+              ))
+          .toList(),
+      sunsetTime: weatherJson['forecast']['forecastday'][0]['astro']['sunset'],
+      uvIndex: "${current['uv'].round()}",
+    );
+  }
+
+  String _formatTo12Hour(DateTime dateTime) {
+    final hour = dateTime.hour % 12 == 0 ? 12 : dateTime.hour % 12;
+    final period = dateTime.hour < 12 ? 'AM' : 'PM';
+    return "$hour $period";
+  }
+
+  String _mapConditionToIcon(String condition) {
+    switch (condition.toLowerCase()) {
+      case "sunny":
+      case "clear":
+        return "asset/sunny.json";
+      case "partly cloudy":
+        return "asset/partly_cloudy.json";
+      case "cloudy":
+      case "overcast":
+        return "asset/cloudy.json";
+      case "rain":
+      case "light rain":
+      case "moderate rain":
+      case "heavy rain":
+        return "asset/rain.json";
+      default:
+        return "asset/partly_cloudy.json";
+    }
+  }
+
+  void _toggleDay(bool nextDay) {
+    setState(() {
+      showNextDay = nextDay;
+      weatherData = _buildWeatherData(nextDay ? 1 : 0); // 0 for today, 1 for next day
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,204 +158,182 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: Dimensions.padding),
-                  child: Text(
-                    "Dhaka",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              const Text(
-                "📍 Current Location",
-                style: TextStyle(color: Colors.white),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 27.0, right: 27.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator(color: Colors.white))
+              : Column(
                   children: [
-                    Image.asset(
-                      "asset/partly_cloudy.png",
-                      height: 130,
-                      width: 135,
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: Dimensions.padding),
+                        child: Text(
+                          weatherData.city,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ),
                     ),
+                    const SizedBox(height: 15),
                     const Text(
-                      "13°",
-                      style: TextStyle(
-                          fontSize: 122,
-                          fontFamily: "circular",
-                          color: Colors.white,
-                          fontWeight: FontWeight.w300),
-                      overflow: TextOverflow.ellipsis,
+                      "📍 Current Location",
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
-              ),
-              const Text(
-                "Partly Cloud  -  H:17º  L:4º",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: "circular",
-                  fontSize: 23,
-                ),
-              ),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.only(left: 80.0, right: 80.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    WeatherButton(
-                      label: "Today",
-                      backgroundColor: Color(0xFFFFFFFF),
-                    ),
-                    WeatherButton(
-                      label: "Next Day",
-                      backgroundColor: Color(0xFF000000),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15),
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    children: [
-                      Row(
-                        children: List.generate(
-                          6,
-                          (index) => Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: HourlyWeatherContainer(
-                              time: "Now", // Replace with dynamic data later
-                              iconPath: "asset/partly_cloudy.png",
-                              temperature: "13°",
-                            ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 27.0, right: 27.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Lottie.asset(
+                            weatherData.hourlyForecast[0].iconPath,
+                            height: 130,
+                            width: 135,
+                            fit: BoxFit.contain,
                           ),
+                          Text(
+                            weatherData.currentTemp,
+                            style: const TextStyle(
+                              fontSize: 122,
+                              fontFamily: "circular",
+                              color: Colors.white,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      "${weatherData.condition}  -  H:${weatherData.highTemp}  L:${weatherData.lowTemp}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: "circular",
+                        fontSize: 23,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 100.0, right: 93.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          WeatherButton(
+                            label: "Today",
+                            backgroundColor: const Color(0xFFFFFFFF),
+                            onTap: () => _toggleDay(false),
+                          ),
+                          WeatherButton(
+                            label: "Next Day",
+                            backgroundColor: const Color(0xFF000000),
+                            onTap: () => _toggleDay(true),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          children: weatherData.hourlyForecast
+                              .map((forecast) => Padding(
+                                    padding: const EdgeInsets.only(right: 15),
+                                    child: HourlyWeatherContainer(
+                                      time: forecast.time,
+                                      iconPath: forecast.iconPath,
+                                      temperature: forecast.temperature,
+                                    ),
+                                  ))
+                              .toList(),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-              Flexible(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      ClipPath(
-                        clipper: BottomContainerClipper(),
-                        child: Container(
-                          width: double.infinity,
-                          constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height * 0.3,
-                            minHeight: 180,
-                          ),
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Color(0xFF97ABFF), Color(0xFF123597)],
-                            ),
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(height: 50),
-                                InfoContainer(
-                                  title: "Sunset",
-                                  value: "6:30 PM",
-                                  iconPath: "asset/sunset.png",
-                                  isHorizontal: true,
-                                  iconColor: Colors.white,
+                    ),
+                    const SizedBox(height: 32),
+                    Flexible(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            ClipPath(
+                              clipper: BottomContainerClipper(),
+                              child: Container(
+                                width: double.infinity,
+                                constraints: BoxConstraints(
+                                  maxHeight: MediaQuery.of(context).size.height * 0.3,
+                                  minHeight: 180,
                                 ),
-                                const SizedBox(height: 20),
-                                InfoContainer(
-                                  title: "UV Index",
-                                  value: "1 low",
-                                  iconPath: "asset/sunrise.png",
-                                  isHorizontal: true,
-                                  iconColor: const Color.fromARGB(255, 214, 214, 214),
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [Color(0xFF97ABFF), Color(0xFF123597)],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 200,
-                        left: MediaQuery.of(context).size.width / 2 - 35,
-                        child: Container(
-                          width: 70,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Color(0xff92a3db), Color(0xff536dc2)],
-                            ),
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                              color: const Color(0xFF4461bd),
-                              width: 9.0,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 32.0),
-                              child: Image(
-                                image: AssetImage("asset/arrow_up.png"),
-                                height: 20,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(height: 50),
+                                      InfoContainer(
+                                        title: "Sunset",
+                                        value: weatherData.sunsetTime,
+                                        iconPath: "asset/sunset.json",
+                                        isHorizontal: true,
+                                        iconColor: Colors.white,
+                                      ),
+                                      const SizedBox(height: 20),
+                                      InfoContainer(
+                                        title: "UV Index",
+                                        value: weatherData.uvIndex,
+                                        iconPath: "asset/uv_index.json",
+                                        isHorizontal: true,
+                                        iconColor: const Color.fromARGB(255, 214, 214, 214),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                            Positioned(
+                              bottom: 200,
+                              left: MediaQuery.of(context).size.width / 2 - 35,
+                              child: Container(
+                                width: 70,
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [Color(0xff92a3db), Color(0xff536dc2)],
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(
+                                    color: const Color(0xFF4461bd),
+                                    width: 9.0,
+                                  ),
+                                ),
+                                child: const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 32.0),
+                                    child: Image(
+                                      image: AssetImage("asset/arrow_up.png"),
+                                      height: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );
   }
-}
-
-// BottomContainerClipper (unchanged from previous)
-class BottomContainerClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    final width = size.width;
-    final height = size.height;
-
-    path.moveTo(0, height);
-    path.lineTo(0, 70);
-    path.quadraticBezierTo(width * 0.25, 0, width * 0.5, 0);
-    path.quadraticBezierTo(width * 0.75, 0, width, 70);
-    path.lineTo(width, height);
-    path.lineTo(0, height);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
